@@ -13,7 +13,7 @@
     {
       "id": 2,
       "description": "Create a Dockerfile and Docker Compose configuration for containerizing the application.",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": 3,
