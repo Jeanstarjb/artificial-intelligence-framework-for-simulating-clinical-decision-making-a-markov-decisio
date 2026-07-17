@@ -1,0 +1,21 @@
+{
+  "name": "cdss-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.10.0",
+    "@mui/material": "^5.13.2",
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "axios": "^1.3.4",
+    "recharts": "^2.6.0",
+    "framer-motion": "^10.12.16"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test"
+  }
+}
