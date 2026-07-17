@@ -1,11 +1,44 @@
-# Artificial Intelligence Framework for Simulating Clinical Decision-Making: A Markov Decision Process Approach
+# Clinical Decision Support System (CDSS)
 
-**Research Paper:** [https://arxiv.org/pdf/1301.2158v1](https://arxiv.org/pdf/1301.2158v1)
+**Next-Gen AI-Powered Clinical Optimization Platform**
 
-## The Mission
-The healthcare system faces challenges such as rising costs, complexity, a growing number of treatment options, and the inability to effectively deliver actionable insights to frontline providers, leading to suboptimal clinical decision-making and patient outcomes.
+## Architecture Overview
+- **Real-time Decision Engine**: MDP/DDN core
+- **Data Layer**: PostgreSQL + EHR integrations
+- **AI/ML Stack**: Python 3.10, PyTorch 2.0, TensorFlow Extended
+- **API Layer**: FastAPI with OAuth2 security
+- **Frontend**: React 18 with Medical Visualization Toolkit
+- **Infrastructure**: AWS EKS, RDS, Dockerized microservices
 
-## Architecture
-The solution is a cloud-based Clinical Decision Support System (CDSS) powered by a Markov Decision Process (MDP) and Dynamic Decision Networks (DDN). The system will use real-time patient data from Electronic Health Records (EHRs) to simulate and optimize treatment paths, accounting for uncertainties and missing data. The tech stack includes Python (for core AI/ML algorithms), TensorFlow/PyTorch (for machine learning), PostgreSQL (for structured patient data), FastAPI (for backend APIs), React (for the frontend user interface), Docker (for containerization), Kubernetes (for orchestration), and AWS (for cloud hosting).
+## Getting Started
+```bash
+# Clone repository
+git clone https://github.com/org/cdss-core.git
+cd cdss-core
 
-## Progress Log
+# Install dependencies
+make install
+
+# Start development environment
+make dev
+```
+
+## Project Structure
+```
+├── backend/
+│   ├── core/              # MDP/DDN implementation
+│   ├── api/               # FastAPI endpoints
+│   └── data/              # EHR data models
+├── frontend/
+│   ├── public/            # Medical icon sets
+│   └── src/
+│       ├── components/    # Interactive dashboards
+│       └── themes/        # Healthcare design system
+├── infrastructure/
+│   ├── k8s/               # Kubernetes manifests
+│   └── aws/               # CloudFormation templates
+└── research/              # Clinical validation studies
+```
+
+## License
+MIT Medical Open Innovation License
