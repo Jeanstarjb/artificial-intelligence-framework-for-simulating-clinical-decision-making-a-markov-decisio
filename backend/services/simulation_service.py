@@ -1,6 +1,6 @@
 from schemas import SimulationResult
+from .mdp_engine import create_clinical_mdp
 from typing import Dict, Any
-import numpy as np
 
 async def simulate_treatment_paths(
     patient_data: Dict[str, Any],
@@ -8,20 +8,22 @@ async def simulate_treatment_paths(
     discount_factor: float = 0.9,
     max_iterations: int = 1000
 ) -> SimulationResult:
-    """
-    MDP-based treatment path simulation with probabilistic modeling
-    Returns mock data for initial implementation
-    """
+    mdp = create_clinical_mdp(patient_data)
+    initial_state = determine_initial_state(patient_data)
+    treatment_path = mdp.generate_treatment_path(initial_state, horizon)
+    
+    expected_utility = sum(step['reward'] * (discount_factor ** i) 
+                          for i, step in enumerate(treatment_path))
+    
     return SimulationResult(
-        optimal_path=[
-            {"action": "Administer Drug A", "state": "Stable", "probability": 0.85},
-            {"action": "Physical Therapy", "state": "Improving", "probability": 0.78}
-        ],
-        expected_utility=0.92,
-        confidence_interval=(0.88, 0.95),
-        risk_assessment={
-            "adverse_risk": 0.12,
-            "readmission_probability": 0.08,
-            "cost_effectiveness": 0.94
-        }
+        optimal_path=treatment_path,
+        expected_utility=expected_utility
     )
+
+def determine_initial_state(patient_data: Dict) -> str:
+    vitals = patient_data.get('vital_signs', {})
+    if vitals.get('heart_rate', 0) > 120 or vitals.get('bp_systolic', 0) > 180:
+        return "critical"
+    if patient_data.get('medical_history', {}).get('chronic_conditions', []):
+        return "stable"
+    return "improving"
