@@ -18,7 +18,7 @@
     {
       "id": 3,
       "description": "Develop the backend API using FastAPI to handle requests for patient data and decision simulations.",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": 4,
