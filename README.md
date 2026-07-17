@@ -42,3 +42,4 @@ make dev
 
 ## License
 MIT Medical Open Innovation License
+- **Completed Task:** Set up the project repository, including directory structure, basic README, and version control with Git.
