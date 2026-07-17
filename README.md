@@ -44,3 +44,4 @@ make dev
 MIT Medical Open Innovation License
 - **Completed Task:** Set up the project repository, including directory structure, basic README, and version control with Git.
 - **Completed Task:** Create a Dockerfile and Docker Compose configuration for containerizing the application.
+- **Completed Task:** Develop the backend API using FastAPI to handle requests for patient data and decision simulations.
