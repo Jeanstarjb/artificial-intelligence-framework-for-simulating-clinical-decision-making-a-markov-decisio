@@ -1,29 +1,18 @@
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List, Optional, Dict
 from datetime import datetime
 
-class PatientResponse(BaseModel):
-    id: str
-    medical_record_number: str
-    name: str
-    age: int
-    gender: str
-    medical_history: dict
-    current_medications: dict
-    vital_signs: dict
-    created_at: datetime
-    updated_at: datetime
-
-    class Config:
-        orm_mode = True
-
-class SimulationParameters(BaseModel):
+class DDNSimulationParameters(BaseModel):
     horizon: int = 5
     discount_factor: float = 0.9
     max_iterations: int = 1000
+    observation_model: Dict[str, Dict[str, Dict[str, float]]]
+    initial_belief: Dict[str, float]
+
+class BeliefState(BaseModel):
+    probabilities: Dict[str, float]
 
 class SimulationResult(BaseModel):
     optimal_path: List[dict]
     expected_utility: float
-    confidence_interval: tuple
-    risk_assessment: dict
+    belief_states: List[BeliefState]
