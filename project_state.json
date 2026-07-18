@@ -43,7 +43,7 @@
     {
       "id": 8,
       "description": "Create a PostgreSQL database schema to store patient data, simulation results, and model parameters.",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": 9,
