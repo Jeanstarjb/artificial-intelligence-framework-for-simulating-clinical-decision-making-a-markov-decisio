@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from database import engine, Base
-from routers import patients, simulations
+from routers import patients, simulations, data_ingestion
 import os
 
 @asynccontextmanager
@@ -14,7 +14,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="CDSS Core API",
     description="Clinical Decision Support Engine",
-    version="0.2.0",
+    version="0.3.0",
     lifespan=lifespan
 )
 
@@ -28,13 +28,4 @@ app.add_middleware(
 
 app.include_router(patients.router)
 app.include_router(simulations.router)
-
-@app.get("/health")
-async def health_check():
-    return {
-        "status": "operational",
-        "version": {
-            "engine": "MDP v2.3",
-            "model": "clinical-path-optimizer"
-        }
-    }
+app.include_router(data_ingestion.router)
