@@ -48,3 +48,4 @@ MIT Medical Open Innovation License
 - **Completed Task:** Implement the Markov Decision Process (MDP) model for simulating sequential treatment decisions.
 - **Completed Task:** Integrate Dynamic Decision Networks (DDN) to handle partially observable environments and maintain belief states.
 - **Completed Task:** Develop a module to preprocess and ingest real patient data from Electronic Health Records (EHRs) into the system.
+- **Completed Task:** Design and implement a simulation engine to evaluate healthcare policies and treatment paths using the MDP and DDN models.
