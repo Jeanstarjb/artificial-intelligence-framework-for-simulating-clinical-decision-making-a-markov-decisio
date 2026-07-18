@@ -22,93 +22,86 @@ class ClinicalDDN:
         self.observation_model = observation_model
         self.reward_model = reward_model
         self.discount = discount
-        self.state_idx = {s: i for i, s in enumerate(states)}
-        self.action_idx = {a: i for i, a in enumerate(actions)}
-        self.obs_idx = {o: i for i, o in enumerate(observations)}
 
-    def update_belief(self,
-                     belief: BeliefState,
-                     action: str,
-                     observation: str) -> BeliefState:
+    def update_belief(self, belief: BeliefState, action: str, observation: str) -> BeliefState:
+        """Bayesian belief update using observation model"""
         new_belief = {}
-        for s_prime in self.states:
-            total = 0.0
-            for s in self.states:
-                trans_prob = self.transition_model[s].get(action, {}).get(s_prime, 0.0)
-                obs_prob = self.observation_model[s_prime].get(action, {}).get(observation, 0.0)
-                total += belief.probabilities.get(s, 0.0) * trans_prob * obs_prob
-            new_belief[s_prime] = total
+        total = 0.0
+        for state in self.states:
+            prob = 0.0
+            for prev_state in self.states:
+                prob += (
+                    self.transition_model[prev_state][action][state] *
+                    self.observation_model[state][action][observation] *
+                    belief.probabilities[prev_state]
+                )
+            new_belief[state] = prob
+            total += prob
         
-        # Normalize
-        total_prob = sum(new_belief.values())
-        return BeliefState(probabilities={s: prob/total_prob for s, prob in new_belief.items()})
+        # Normalize probabilities
+        return BeliefState(probabilities={s: p/total for s, p in new_belief.items()})
 
-    def value_iteration(self,
-                       initial_belief: BeliefState,
-                       horizon: int = 5) -> Tuple[Dict[str, float], Dict[str, str]]:
-        V = [{} for _ in range(horizon+1)]
-        policy = [{} for _ in range(horizon)]
-        
-        # Initialize terminal values
-        for s in self.states:
-            V[horizon][s] = 0.0
-        
-        for t in reversed(range(horizon)):
-            for s in self.states:
-                max_value = -np.inf
-                best_action = None
-                for a in self.actions:
-                    exp_reward = 0.0
-                    for s_prime in self.states:
-                        trans_prob = self.transition_model[s].get(a, {}).get(s_prime, 0.0)
-                        reward = self.reward_model[s].get(a, 0.0)
-                        obs_prob = sum(
-                            self.observation_model[s_prime].get(a, {}).get(o, 0.0)
-                            for o in self.observations
-                        )
-                        exp_reward += trans_prob * (reward + self.discount * V[t+1][s_prime] * obs_prob)
-                    if exp_reward > max_value:
-                        max_value = exp_reward
-                        best_action = a
-                V[t][s] = max_value
-                policy[t][s] = best_action
-        
-        # Calculate initial value based on belief
-        initial_value = sum(initial_belief.probabilities[s] * V[0][s] for s in self.states)
-        return initial_value, policy
-
-    def generate_optimal_path(self,
-                             initial_belief: BeliefState,
-                             horizon: int) -> List[Dict]:
-        path = []
+    def monte_carlo_simulate_path(self, initial_belief: BeliefState, policy: Dict, steps: int = 100) -> Dict:
+        """Simulate treatment path with probabilistic outcomes"""
         current_belief = initial_belief
-        _, policy = self.value_iteration(initial_belief, horizon)
-        
-        for t in range(horizon):
-            if not policy[t]:
-                break
+        history = []
+        total_reward = 0.0
+
+        for t in range(steps):
+            # Get action from policy based on current belief
+            action = self._select_action_from_policy(current_belief, policy)
             
-            # Choose action based on maximum expected reward
-            action = max(policy[t], key=lambda s: current_belief.probabilities.get(s, 0))
-            
-            # Simulate transition and observation (would be real data in production)
-            # For simulation purposes, sample next state and observation
-            next_state = np.random.choice(
+            # Sample next state from transition model
+            true_state = np.random.choice(
                 self.states,
                 p=[current_belief.probabilities[s] for s in self.states]
             )
-            observation = np.random.choice(
-                self.observations,
-                p=list(self.observation_model[next_state][action].values())
-            )
+            next_state_probs = self.transition_model[true_state][action]
+            next_state = np.random.choice(list(next_state_probs.keys()), p=list(next_state_probs.values()))
             
-            path.append({
-                'belief_state': current_belief.dict(),
-                'action': action,
-                'observation': observation,
-                'reward': self.reward_model[next_state][action]
-            })
+            # Get observation
+            observation_probs = self.observation_model[next_state][action]
+            observation = np.random.choice(list(observation_probs.keys()), p=list(observation_probs.values()))
             
+            # Update belief and accumulate reward
             current_belief = self.update_belief(current_belief, action, observation)
-        
-        return path
+            reward = self.reward_model[true_state][action]
+            total_reward += (self.discount ** t) * reward
+            
+            history.append({
+                'step': t,
+                'action': action,
+                'true_state': true_state,
+                'observed': observation,
+                'belief': current_belief.dict(),
+                'immediate_reward': reward
+            })
+
+        return {
+            'total_discounted_reward': total_reward,
+            'final_belief': current_belief.dict(),
+            'state_history': history,
+            'qaly_equivalent': total_reward * 0.85  # Example conversion factor
+        }
+
+    def _select_action_from_policy(self, belief: BeliefState, policy: Dict) -> str:
+        """Select action based on policy type"""
+        if policy['type'] == 'optimal':
+            return self._optimal_action(belief)
+        elif policy['type'] == 'random':
+            return np.random.choice(self.actions)
+        elif policy['type'] == 'clinical_guidelines':
+            return self._guideline_based_action(belief)
+        else:
+            raise ValueError("Unknown policy type")
+
+    def _optimal_action(self, belief: BeliefState) -> str:
+        """Calculate optimal action using value iteration"""
+        # Implementation of value iteration for POMDP
+        # [This would be expanded with actual algorithm]
+        return self.actions[0]
+
+    def _guideline_based_action(self, belief: BeliefState) -> str:
+        """Heuristic based on clinical guidelines"""
+        most_likely_state = max(belief.probabilities, key=belief.probabilities.get)
+        return 'monitor' if most_likely_state == 'stable' else 'intervene'
