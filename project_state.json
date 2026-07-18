@@ -33,7 +33,7 @@
     {
       "id": 6,
       "description": "Develop a module to preprocess and ingest real patient data from Electronic Health Records (EHRs) into the system.",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": 7,
