@@ -28,7 +28,7 @@
     {
       "id": 5,
       "description": "Integrate Dynamic Decision Networks (DDN) to handle partially observable environments and maintain belief states.",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": 6,
