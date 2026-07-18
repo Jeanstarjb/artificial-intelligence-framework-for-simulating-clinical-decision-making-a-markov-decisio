@@ -1,29 +1,33 @@
 from schemas import SimulationResult
 from .mdp_engine import create_clinical_mdp
+from .ddn_engine import ClinicalDDN, BeliefState
 from typing import Dict, Any
 
 async def simulate_treatment_paths(
     patient_data: Dict[str, Any],
-    horizon: int = 5,
-    discount_factor: float = 0.9,
-    max_iterations: int = 1000
+    params: DDNSimulationParameters
 ) -> SimulationResult:
-    mdp = create_clinical_mdp(patient_data)
-    initial_state = determine_initial_state(patient_data)
-    treatment_path = mdp.generate_treatment_path(initial_state, horizon)
-    
-    expected_utility = sum(step['reward'] * (discount_factor ** i) 
-                          for i, step in enumerate(treatment_path))
-    
-    return SimulationResult(
-        optimal_path=treatment_path,
-        expected_utility=expected_utility
+    # Initialize DDN with clinical models
+    ddn = ClinicalDDN(
+        states=patient_data['possible_states'],
+        actions=patient_data['available_treatments'],
+        observations=patient_data['possible_observations'],
+        transition_model=patient_data['transition_model'],
+        observation_model=params.observation_model,
+        reward_model=patient_data['reward_model'],
+        discount=params.discount_factor
     )
 
-def determine_initial_state(patient_data: Dict) -> str:
-    vitals = patient_data.get('vital_signs', {})
-    if vitals.get('heart_rate', 0) > 120 or vitals.get('bp_systolic', 0) > 180:
-        return "critical"
-    if patient_data.get('medical_history', {}).get('chronic_conditions', []):
-        return "stable"
-    return "improving"
+    initial_belief = BeliefState(probabilities=params.initial_belief)
+    treatment_path = ddn.generate_optimal_path(initial_belief, params.horizon)
+
+    expected_utility = sum(
+        step['reward'] * (params.discount_factor ** i)
+        for i, step in enumerate(treatment_path)
+    )
+
+    return SimulationResult(
+        optimal_path=treatment_path,
+        expected_utility=expected_utility,
+        belief_states=[BeliefState(**step['belief_state']) for step in treatment_path]
+    )
