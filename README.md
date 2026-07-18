@@ -46,3 +46,4 @@ MIT Medical Open Innovation License
 - **Completed Task:** Create a Dockerfile and Docker Compose configuration for containerizing the application.
 - **Completed Task:** Develop the backend API using FastAPI to handle requests for patient data and decision simulations.
 - **Completed Task:** Implement the Markov Decision Process (MDP) model for simulating sequential treatment decisions.
+- **Completed Task:** Integrate Dynamic Decision Networks (DDN) to handle partially observable environments and maintain belief states.
