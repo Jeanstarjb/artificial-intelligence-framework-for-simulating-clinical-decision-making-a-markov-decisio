@@ -63,7 +63,7 @@
     {
       "id": 12,
       "description": "Set up unit tests and integration tests for the backend API, MDP model, and data ingestion pipeline.",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": 13,
