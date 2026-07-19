@@ -48,7 +48,7 @@
     {
       "id": 9,
       "description": "Develop a React-based frontend for clinicians to input patient data, view treatment recommendations, and analyze simulation results.",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": 10,
