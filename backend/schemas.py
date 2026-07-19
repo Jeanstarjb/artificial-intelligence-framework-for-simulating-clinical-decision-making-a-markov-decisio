@@ -1,17 +1,18 @@
-from pydantic import BaseModel, Field
-from typing import Dict, List, Optional
-from datetime import datetime
+from pydantic import BaseModel
+from typing import List, Dict
 
-class EHRWebhookPayload(BaseModel):
-    entries: List[Dict[str, Any]]
+class RecommendationRequest(BaseModel):
+    patient_id: str
+    patient_data: Dict[str, any]
+    model_parameters: Dict[str, any] = {}
 
-class EHRWebhookLogSchema(BaseModel):
-    received_at: datetime
-    status: str
-    payload_size: int
-    processed_entries: int
-    patient_ids: List[str]
-    error_message: Optional[str] = None
+class TreatmentRecommendation(BaseModel):
+    treatment: str
+    confidence: float
+    rationale: str
 
-    class Config:
-        orm_mode = True
+class RecommendationResponse(BaseModel):
+    patient_id: str
+    recommendations: List[TreatmentRecommendation]
+    model_version: str
+    confidence_threshold: float
