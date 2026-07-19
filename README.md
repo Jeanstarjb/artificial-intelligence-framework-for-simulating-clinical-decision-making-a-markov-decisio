@@ -51,3 +51,4 @@ MIT Medical Open Innovation License
 - **Completed Task:** Design and implement a simulation engine to evaluate healthcare policies and treatment paths using the MDP and DDN models.
 - **Completed Task:** Create a PostgreSQL database schema to store patient data, simulation results, and model parameters.
 - **Completed Task:** Develop a React-based frontend for clinicians to input patient data, view treatment recommendations, and analyze simulation results.
+- **Completed Task:** Implement a real-time data synchronization mechanism between the EHR system and the backend API.
