@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from database import engine, Base
-from routers import patients, simulations, data_ingestion
+from routers import patients, simulations, data_ingestion, recommendations
 import os
 
 @asynccontextmanager
@@ -14,7 +14,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="CDSS Core API",
     description="Clinical Decision Support Engine",
-    version="0.3.0",
+    version="0.4.0",
     lifespan=lifespan
 )
 
@@ -29,3 +29,4 @@ app.add_middleware(
 app.include_router(patients.router)
 app.include_router(simulations.router)
 app.include_router(data_ingestion.router)
+app.include_router(recommendations.router)
