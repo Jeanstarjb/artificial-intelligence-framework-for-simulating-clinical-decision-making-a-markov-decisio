@@ -32,3 +32,5 @@ docker-compose up --build
 - Passing tests
 - Performance metrics
 ```
+
+- **Completed Task:** Write comprehensive documentation for the system, including usage guides for clinicians and technical documentation for developers.
