@@ -55,3 +55,4 @@ MIT Medical Open Innovation License
 - **Completed Task:** Integrate a machine learning module (e.g., TensorFlow or PyTorch) for personalized medicine recommendations based on historical patient data.
 - **Completed Task:** Set up unit tests and integration tests for the backend API, MDP model, and data ingestion pipeline.
 - **Completed Task:** Deploy the application to an AWS cloud environment using Kubernetes for orchestration.
+- **Completed Task:** Conduct performance testing and optimization for the MDP and DDN models to ensure scalability and efficiency.
