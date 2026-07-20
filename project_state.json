@@ -68,7 +68,7 @@
     {
       "id": 13,
       "description": "Deploy the application to an AWS cloud environment using Kubernetes for orchestration.",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": 14,
